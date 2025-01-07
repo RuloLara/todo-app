@@ -14,3 +14,8 @@ def show():
             print(f"{index + 1} - {todo.strip()}")
     else:
         print("Empty list...")
+
+if __name__ == "__main__":
+    message = """This can be used to debug. 
+    This lines will be executed only when functions.py is executed directly"""
+    print(message)
