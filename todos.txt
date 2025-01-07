@@ -1,0 +1,5 @@
+buy
+arm
+hit
+edit code
+study the python course
