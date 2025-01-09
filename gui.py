@@ -2,20 +2,19 @@ import functions
 import FreeSimpleGUI as sg
 
 todos = functions.readfile()
-
+sg.theme("DarkTeal12")
 label = sg.Text("Type in a To-Do")
 input_box = sg.InputText(tooltip="Enter To-Do: ", key='input')
 add_btn = sg.Button("Add")
 edit_btn = sg.Button("Edit")
 delete_btn = sg.Button("Complete", key='delete')
 layout = sg.Listbox(values=todos, size=(50, 10), key='todolist', enable_events=True, bind_return_key=False)
-output = sg.Text(key='output')
 
 window = sg.Window('My To-Do App',
                    layout=[[label],
                            [input_box, add_btn, edit_btn],
                            [layout],
-                           [delete_btn, output]
+                           [delete_btn]
                            ],
                    font=('STXihei',12))
 
@@ -34,14 +33,18 @@ while True:
                 window['input'].update('')
 
         case "Edit":
-            edit_todo = value['todolist'][0]
-            new_todo = value['input']
-            if edit_todo and new_todo:
-                todo_index = todos.index(edit_todo)
-                todos[todo_index] = new_todo + '\n'
-                functions.writefile(todos)
-                window['todolist'].update(todos)
-                window['input'].update('')
+            try:
+                edit_todo = value['todolist'][0]
+                new_todo = value['input']
+                if edit_todo and new_todo:
+                    todo_index = todos.index(edit_todo)
+                    todos[todo_index] = new_todo + '\n'
+                    functions.writefile(todos)
+                    window['todolist'].update(todos)
+                    window['input'].update('')
+            except IndexError:
+                sg.popup('Select a value in the list for edition')
+
         case "delete":
             try:
                 print('1 step')
@@ -57,7 +60,9 @@ while True:
                     window['todolist'].update(todos)
                     window['input'].update('')
             except ValueError:
-                window['output'].update('Select a value in the list for deletion')
+                sg.popup('Select a value in the list for deletion')
+            except IndexError:
+                sg.popup('Select a value in the list for deletion')
         case "todolist":
             try:
                 edit_todo = value['todolist'][0].strip()
